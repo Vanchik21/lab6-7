@@ -1,7 +1,7 @@
 <?php
 $pdo = new PDO("mysql:host=localhost;dbname=lab6", "root", "");
 
-$action = $_GET['action'] ?? '';
+$action = isset($_GET['action']) ? $_GET['action'] : '';
 
 switch ($action) {
     case 'add':
@@ -9,8 +9,8 @@ switch ($action) {
         if ($contentType === "application/json") {
             $content = trim(file_get_contents("php://input"));
             $decoded = json_decode($content, true);
-            $title = $decoded['title'] ?? '';
-            $content = $decoded['content'] ?? '';
+            $title = isset($decoded['title']) ? $decoded['title'] : '';
+            $content = isset($decoded['content']) ? $decoded['content'] : '';
             $query = $pdo->prepare('INSERT INTO notesapp (title, content) VALUES (:title, :content)');
             $query->execute(['title' => $title, 'content' => $content]);
             echo json_encode(['success' => 'Нотатка успішно додана']);
@@ -29,7 +29,7 @@ switch ($action) {
         if ($contentType === "application/json") {
             $content = trim(file_get_contents("php://input"));
             $decoded = json_decode($content, true);
-            $id = $decoded['id'] ?? '';
+            $id = isset($decoded['id']) ? $decoded['id'] : '';
             $query = $pdo->prepare('DELETE FROM notesapp WHERE id = :id');
             $query->execute(['id' => $id]);
             echo json_encode(['success' => 'Нотатка успішно видалений']);
@@ -41,9 +41,9 @@ switch ($action) {
         if ($contentType === "application/json") {
             $content = trim(file_get_contents("php://input"));
             $decoded = json_decode($content, true);
-            $id = $decoded['id'] ?? '';
-            $title = $decoded['title'] ?? '';
-            $content = $decoded['content'] ?? '';
+            $id = isset($decoded['id']) ? $decoded['id'] : '';
+            $title = isset($decoded['title']) ? $decoded['title'] : '';
+            $content = isset($decoded['content']) ? $decoded['content'] : '';
             $query = $pdo->prepare('UPDATE notesapp SET title = :title, content = :content WHERE id = :id');
             $query->execute(['id' => $id, 'title' => $title, 'content' => $content]);
             echo json_encode(['success' => 'Нотатки успішно оновлені']);
